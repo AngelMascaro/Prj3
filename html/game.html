@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<base href="http://www.projecte3.cat/">
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Projecte3</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://unpkg.com/vue@next"></script>
+	<script src="https://unpkg.com/vue-i18n@next"></script>
+	<!-- <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> -->
+	<script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
+	<script src="js/checkpointRequest.js"></script>
+	<script src="js/onLoad.js" defer></script>
+</head>
+
+<body>
+	<main>
+		<section id="app">
+			<form>
+				<label>{{ $t('message.language') }}</label>
+				<select v-model="$i18n.locale">
+					<option value="en">English</option>
+					<option value="ca">Català</option>
+				</select>
+			</form>
+			<p>{{ $t("message.hello") }}</p>
+		</section>
+	</main>
+	<input type="text" name="" id="checkpoint">
+	<button id="json">JSON</button>
+	<!-- <div id="counter">
+		Counter: {{ counter }}
+	</div> -->
+	<script src="/js/i18n.js"></script>
+	<table id="table"></table>
+
+</body>
+
+</html>

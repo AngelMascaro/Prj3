@@ -5,12 +5,19 @@ import requests
 import re
 import json
 import sys
+
+
 # declaration of variables
-# LANG = str(sys.argv[1])
-# PLANET = int(sys.argv[2])
-out_file = open("js/planetData.json", "w") 
-LANG = "ca"
-PLANET = 2
+try:
+    LANG = str(sys.argv[1])
+except:
+    LANG = "en"
+try:
+    CHKPOINT = int(sys.argv[2])
+except:
+    CHKPOINT = 2
+
+OUT_FILE = open("js/planetData.json", "w") 
 DATA = {
     "ca": {
         "url":[
@@ -28,11 +35,10 @@ DATA = {
             "Descobert per",
             "Data descobriment",
             "Cos pare",
-            "Apoàpside",
-            "Periàpside",
+            "Semieix major a",
             "Període orbital P",
             "Velocitat orbital mitjana",
-            "Distància de la Terra,",
+            "Distància de la Terra",
             "Radi",
             "Massa",
             "Volum",
@@ -55,9 +61,8 @@ DATA = {
         "labels":[
             "Discovered by",
             "Discovery date",
-            "Aphelion",
-            "Perihelion",
             "Orbital period",
+            "Semi-major axis",
             "Volume",
             "Known satellites",
             "Mass",
@@ -69,29 +74,34 @@ DATA = {
 }
 result = {}
 infobox = SoupStrainer(class_="infobox")
-notes_regex = "(\[[\w]* *\d+\])+"
+notes_regex = "(\[.*?\])|(\(.*?\))"
 # get URL
-url = f"https://{LANG}.wikipedia.org/wiki/{DATA[LANG]['url'][PLANET]}"
+url = f"https://{LANG}.wikipedia.org/wiki/{DATA[LANG]['url'][CHKPOINT]}"
 page = requests.get(url)
 
 # scrape webpage
 soup = BeautifulSoup(page.content, 'html.parser', parse_only=infobox)
 
-# dissect title
+# dissect title and images
 try:
     result["title"] = soup.find("caption").get_text(" ", strip=True)
 except:
     result["title"] = soup.find("th").get_text(" ", strip=True)
-result["symbol"] = soup.find("img",{'src': re.compile(r'\.svg')})["src"]
-result["image"] = soup.find("img",{'src': re.compile(r'\.jpg')})["src"]
-
+try:    
+    result["symbol"] = soup.find("img",{'alt': re.compile(r'symbol')})["src"]
+    result["image"] = soup.find("img",{'src': re.compile(r'\.jpg')})["src"]
+except:
+    result["symbolSrc"] = ""
+    result["imageSrc"] = ""
 # dissect tbody data
-tbody = soup.find_all("th", string=DATA[LANG]["labels"])
-for th in tbody:
-    label = re.sub(notes_regex, "", th.get_text(" ", strip=True))
-    data = re.sub(notes_regex, "", th.find_next_sibling("td").get_text(" ", strip=True))
-    result[label] = data
+headers = soup.find_all("th")
+for th in headers:
+    aux = re.sub(notes_regex, "", th.get_text(" ", strip=True))
+    if aux in DATA[LANG]["labels"]:
+        label = aux
+        data = re.sub(notes_regex, "", th.find_next_sibling("td").get_text(" ", strip=True))
+        result[label] = data
 # output
 result = json.dumps(result)
-out_file.write(result)
+OUT_FILE.write(result)
 print(result)

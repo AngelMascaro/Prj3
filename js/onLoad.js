@@ -1,17 +1,25 @@
 const table = document.getElementById("table");
 const json = document.getElementById("json");
+const bt_en = $('option[value="en"]');
+const bt_ca = $('option[value="ca"]');
+const currentCheckpoint = new Checkpoint();
+const targetCheckpoint = new Checkpoint();
+json.addEventListener('click', loadCheckpoint);
+bt_en.click(changeLang);
+bt_ca.click(changeLang);
 
-json.addEventListener('click', loadJSON)
+function changeLang(e){
+    Cookies.set('lang', e.target["value"]);
+};
+function Checkpoint(){
+    
+}
+function Quest(){
 
-// for (label in planet) {
-//   let tr = document.createElement("tr"); 
-//   let th = document.createElement("th"); 
-//   let td = document.createElement("td");
-//   let th_text = document.createTextNode(label); 
-//   let td_text = document.createTextNode(planet[label]); 
-//   th.appendChild(th_text); 
-//   td.appendChild(td_text); 
-//   tr.appendChild(th); 
-//   tr.appendChild(td); 
-//   document.getElementById("table").appendChild(tr);  
-// }
+}
+function Ship(health, cargo, fuel, score){
+    this.health = health;
+    this.cargo = cargo;
+    this.fuel = fuel;
+    this.score = score;
+}
