@@ -1,1 +1,14 @@
-{"title": "Venus", "symbol": "//upload.wikimedia.org/wikipedia/commons/thumb/0/00/Venus_symbol_%28bold%29.svg/25px-Venus_symbol_%28bold%29.svg.png", "image": "//upload.wikimedia.org/wikipedia/commons/thumb/8/85/Venus_globe.jpg/300px-Venus_globe.jpg", "Tipus": "planeta interior i planeta inferior", "Cos pare": "Sol", "Semieix major a": "108.208.930 km i 0,72333 ua", "Per\u00edode orbital P": "224,7 d ", "Velocitat orbital mitjana": "35,02\u00a0km/s", "Dist\u00e0ncia de la Terra": "261.000.000 km  38.000.000 km ", "Radi": "mitjana : 6.051,8 km  l\u00ednia equatorial : 6.051,8 km  polar : 6.051,8 km ", "Massa": "4.867,5 Yg", "Volum": "928.430.000.000 km\u00b3 ", "Temperatura de superf\u00edcie": "mitjana 464 \u00b0C ", "Composici\u00f3 atmosf\u00e8rica": "~96,5% Di\u00f2xid de carboni ~3,5% Nitrogen 0.015% Di\u00f2xid de sofre 0.007% Arg\u00f3 0.002% Vapor d'aigua 0.001\u00a07% Mon\u00f2xid de carboni 0.001\u00a02% Heli 0.000\u00a07% Ne\u00f3 traces sulfur de carbonil traces d' \u00e0cid clorh\u00eddric traces d' \u00e0cid fluorh\u00eddric"}
+{
+    "data": {
+        "Semi-major axis": "227 939 200 km ",
+        "Orbital period": "686.980\u00a0d  ",
+        "Volume": "1.631 18 \u00d7 10 11 km 3  ",
+        "Mass": "6.4171 \u00d7 10 23 kg  ",
+        "Surface gravity": "3.720 76 m/s 2  ",
+        "Composition by volume": "95.97% carbon dioxide 1.93% argon 1.89% nitrogen 0.146% oxygen 0.0557% carbon monoxide 0.0210% water vapor 0.0100% nitrogen oxide 0.00025% neon 0.00008% hydrogen deuterium oxide 0.00003% krypton 0.00001% xenon"
+    },
+    "title": "Mars",
+    "symbol": "//upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Mars_symbol_%28bold%29.svg/24px-Mars_symbol_%28bold%29.svg.png",
+    "image": "//upload.wikimedia.org/wikipedia/commons/thumb/0/02/OSIRIS_Mars_true_color.jpg/220px-OSIRIS_Mars_true_color.jpg",
+    "axis": "1"
+}

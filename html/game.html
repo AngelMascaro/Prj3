@@ -7,23 +7,28 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Projecte3</title>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="./style/game.css">
+	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
 	<script src="https://unpkg.com/vue@next"></script>
 	<script src="https://unpkg.com/vue-i18n@next"></script>
+	<!-- <script src="https://pixijs.download/release/pixi.min.js"></script> -->
 	<!-- <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> -->
 	<script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
-	<script src="js/checkpointRequest.js"></script>
+	<script src="js/checkpointRequest.js" async></script>
 	<script src="js/onLoad.js" defer></script>
+	<script src="js/controller.js" defer></script>
+	<script src="js/canvas.js" defer></script>
 </head>
 
 <body>
 	<main>
+		<canvas id="responsive-canvas"></canvas>
 		<section id="app">
 			<form>
 				<label>{{ $t('message.language') }}</label>
 				<select v-model="$i18n.locale">
-					<option value="en">English</option>
-					<option value="ca">Català</option>
+					<option id="bt_en" value="en">English</option>
+					<option id="bt_ca" value="ca">Català</option>
 				</select>
 			</form>
 			<p>{{ $t("message.hello") }}</p>
@@ -31,11 +36,19 @@
 	</main>
 	<input type="text" name="" id="checkpoint">
 	<button id="json">JSON</button>
+	<button id="stop">Stop</button>
 	<!-- <div id="counter">
 		Counter: {{ counter }}
 	</div> -->
 	<script src="/js/i18n.js"></script>
-	<table id="table"></table>
+	<table id="table">
+		<caption id="checkpointName"></caption>
+		<img src="" id="checkpointPhoto" alt="Photo of the planet or satellite">
+		<img src="" id="checkpointSymbol" alt="Orbital's symbol">
+		<tbody id="checkpointData">
+
+		</tbody>
+	</table>
 
 </body>
 

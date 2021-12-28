@@ -6,7 +6,6 @@ import re
 import json
 import sys
 
-
 # declaration of variables
 try:
     LANG = str(sys.argv[1])
@@ -17,10 +16,15 @@ try:
 except:
     CHKPOINT = 2
 
-OUT_FILE = open("js/planetData.json", "w") 
+CITATIONS_REGEX = "(\[.*?\])|(\(.*?\))"
+
+# OUT_FILE = open("js/planetData.json", "w")
+OUTPUT = {
+    "data": {}
+}
 DATA = {
     "ca": {
-        "url":[
+        "url": [
             "Mercuri_(planeta)",
             "Venus_(planeta)",
             "Terra",
@@ -30,12 +34,14 @@ DATA = {
             "Urà_(planeta)",
             "Neptú_(planeta)"
         ],
-        "labels":[
+        "axis_au_pattern": re.compile(r"[, \d]+ ?(ua)", re.IGNORECASE),
+        "axis_km_pattern": re.compile(r"[, \d]+ ?(km)", re.IGNORECASE),
+        "labels": [
+            "Semieix major a",
             "Tipus",
             "Descobert per",
             "Data descobriment",
             "Cos pare",
-            "Semieix major a",
             "Període orbital P",
             "Velocitat orbital mitjana",
             "Distància de la Terra",
@@ -48,7 +54,7 @@ DATA = {
         ]
     },
     "en": {
-        "url":[
+        "url": [
             "Mercury_(planet)",
             "Venus",
             "Earth",
@@ -58,11 +64,13 @@ DATA = {
             "Uranus",
             "Neptune"
         ],
-        "labels":[
+        "axis_au_pattern": re.compile(r"[. \d]+ ?(au)", re.IGNORECASE),
+        "axis_km_pattern": re.compile(r"[. \d]+ ?(km)", re.IGNORECASE),
+        "labels": [
+            "Semi-major axis",
             "Discovered by",
             "Discovery date",
             "Orbital period",
-            "Semi-major axis",
             "Volume",
             "Known satellites",
             "Mass",
@@ -72,36 +80,61 @@ DATA = {
         ]
     }
 }
-result = {}
-infobox = SoupStrainer(class_="infobox")
-notes_regex = "(\[.*?\])|(\(.*?\))"
+INFOBOX = SoupStrainer(class_="infobox")
 # get URL
 url = f"https://{LANG}.wikipedia.org/wiki/{DATA[LANG]['url'][CHKPOINT]}"
 page = requests.get(url)
 
 # scrape webpage
-soup = BeautifulSoup(page.content, 'html.parser', parse_only=infobox)
+SOUP = BeautifulSoup(page.content, 'html.parser', parse_only=INFOBOX)
 
 # dissect title and images
 try:
-    result["title"] = soup.find("caption").get_text(" ", strip=True)
+    OUTPUT["title"] = SOUP.find("caption").get_text(" ", strip=True)
 except:
-    result["title"] = soup.find("th").get_text(" ", strip=True)
-try:    
-    result["symbol"] = soup.find("img",{'alt': re.compile(r'symbol')})["src"]
-    result["image"] = soup.find("img",{'src': re.compile(r'\.jpg')})["src"]
+    OUTPUT["title"] = SOUP.find("th").get_text(" ", strip=True)
+try:
+    OUTPUT["symbol"] = SOUP.find("img", {'alt': re.compile(r'symbol')})["src"]
+    OUTPUT["image"] = SOUP.find("img", {'src': re.compile(r'\.jpg')})["src"]
 except:
-    result["symbolSrc"] = ""
-    result["imageSrc"] = ""
+    OUTPUT["symbolSrc"] = ""
+    OUTPUT["imageSrc"] = ""
+# Get distance from parent
+
+
+def calc_axis(raw_axis):
+    """Takes stripped html data where the axis should be,
+    determines the apropiate unit,
+    process it and appends it to the OUTPUT dict
+
+    Args:
+        raw_axis (string): td from axis th label
+    """
+    # Has Astronomical Units
+    try:
+        raw_axis = DATA[LANG]["axis_au_pattern"].search(raw_axis).group()
+        OUTPUT["axisAU"] = re.sub(r'[^,.\d]', "", raw_axis)
+    # Has KM
+    except:
+        raw_axis = DATA[LANG]["axis_km_pattern"].search(raw_axis).group()
+        OUTPUT["axisKM"] = re.sub(r'[^,.\d]', "", raw_axis)
+
+
 # dissect tbody data
-headers = soup.find_all("th")
+headers = SOUP.find_all("th")
 for th in headers:
-    aux = re.sub(notes_regex, "", th.get_text(" ", strip=True))
-    if aux in DATA[LANG]["labels"]:
-        label = aux
-        data = re.sub(notes_regex, "", th.find_next_sibling("td").get_text(" ", strip=True))
-        result[label] = data
+    # Get string from th
+    label = re.sub(CITATIONS_REGEX, "", th.get_text(" ", strip=True))
+    # Compare from custom list
+    if label in DATA[LANG]["labels"]:
+        data = th.find_next_sibling("td").get_text(" ", strip=True)
+        data = data.replace(u'\xa0', u' ')
+
+        if label == DATA[LANG]["labels"][0]:
+            calc_axis(data)
+        data = re.sub(CITATIONS_REGEX, "", data)
+        OUTPUT["data"][label] = data
 # output
-result = json.dumps(result)
-OUT_FILE.write(result)
-print(result)
+outputJSON = json.dumps(OUTPUT)
+# OUT_FILE.write(outputJSON)
+print(outputJSON)

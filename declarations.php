@@ -8,11 +8,11 @@ define("SUPPORTED_LANG", array(
 // Variables
 // 
 // Set language, default is "en"
-if (isset($_GET["lang"])) 
+if (isset($_GET["lang"]))
   $lang = $_GET["lang"];
-elseif (isset($_COOKIE["lang"])) 
+elseif (isset($_COOKIE["lang"]))
   $lang = $_COOKIE["lang"];
-if(!in_array($lang,SUPPORTED_LANG, true)) $lang = "en";
+if (!in_array($lang, SUPPORTED_LANG, true)) $lang = "en";
 
 // Functions
 function parseUrl($url)

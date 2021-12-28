@@ -7,16 +7,16 @@ const i18n = createI18n({
     en: {
       message: {
         language: "Language",
-        hello: "Hello!"
-      }
+        hello: "Hello!",
+      },
     },
     ca: {
       message: {
         language: "Idioma",
-        hello: "Hola"
-      }
-    }
-  }
+        hello: "Hola",
+      },
+    },
+  },
 });
 
 const app = createApp({});
