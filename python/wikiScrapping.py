@@ -96,12 +96,11 @@ except:
 try:
     OUTPUT["symbol"] = SOUP.find("img", {'alt': re.compile(r'symbol')})["src"]
     OUTPUT["image"] = SOUP.find("img", {'src': re.compile(r'\.jpg')})["src"]
+    OUTPUT["image"] = re.sub(r'[\d]+px', "1100px", OUTPUT["image"])
 except:
     OUTPUT["symbolSrc"] = ""
     OUTPUT["imageSrc"] = ""
 # Get distance from parent
-
-
 def calc_axis(raw_axis):
     """Takes stripped html data where the axis should be,
     determines the apropiate unit,

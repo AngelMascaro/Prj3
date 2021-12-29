@@ -3,25 +3,29 @@ let x_middle = window.innerWidth / 2;
 let y_middle = window.innerHeight / 2;
 // Canvas sizing
 const canvas = document.getElementById("responsive-canvas");
-canvas.width = window.innerWidth;
-canvas.height = 1500;
+canvas.width = document.documentElement.clientWidth;
+canvas.height = window.innerHeight;
 // Update if resized
 window.addEventListener("resize", () => {
-  canvas.width = window.innerWidth;
+  canvas.width = document.documentElement.clientWidth;
   x_middle = window.innerWidth / 2;
   y_middle = window.innerHeight / 2;
 });
 // Background
 const background = document.getElementById("space-background");
+const checkpoint_image = document.getElementById("checkpointPhoto");
+let backgr_motion = 0;
+let backgr_interval;
+
 // Star array
-const MAX_STARS = 150;
+const MAX_STARS = 100;
 const stars = [];
 // 2D pen
 let ctx = canvas.getContext("2d");
 // Star params
 const MAX_RADII = 3;
 const MIN_RADII = 1;
-const SPAWN_RANGE = 30;
+const SPAWN_RANGE = 10;
 const ACCELERATION = 1.03;
 const BRIGHTNESS = 0.015;
 // Star object
@@ -38,7 +42,6 @@ function Star(canvas_x, canvas_y, radii) {
   for (let i = 0; i < 3; i++) {
     this.rgb[i] = randBetween(180, 255);
   }
-  this.rgb.join(",");
   this.color = "rgba(" + this.rgb + "," + this.alpha + ")";
 
   // Methods
@@ -54,28 +57,27 @@ function Star(canvas_x, canvas_y, radii) {
     this.x_speed *= ACCELERATION - deceleration;
     this.y_speed *= ACCELERATION - deceleration;
     // Calculate next frame's position
-    this.canvas_x += this.x_speed + x_motion/30;
-    this.canvas_y += this.y_speed + y_motion/30;
+    // Move every star a fraction of the motion
+    this.canvas_x += this.x_speed + x_motion / 60;
+    this.canvas_y += this.y_speed + y_motion / 60;
     ctx.beginPath();
     ctx.fillStyle = this.color;
     //Draw an arc, position X and Y, radii, start at 0º, end at 360º
     ctx.arc(this.canvas_x, this.canvas_y, this.radii, 0, 2 * Math.PI);
     ctx.fill();
   };
-// async function test() {
-//   console.log('waiting keypress..')
-//   await waitingKeypress();
-//   console.log('good job!')
-// }
 
   this.respawnStar = function () {
-    // Star still inside the canvas, return
     if (
+      // Star still inside the canvas, return
       this.canvas_x < window.innerWidth &&
       this.canvas_x > 0 &&
       this.canvas_y < window.innerHeight &&
       this.canvas_y > 0
-    ) return;
+    )
+      return;
+    // Star out of bounds, respawn
+    // New rand radii
     this.radii = randBetween(MIN_RADII, MAX_RADII);
     // Reset brightness
     this.alpha = 0;
@@ -94,30 +96,48 @@ function Star(canvas_x, canvas_y, radii) {
     // Don't allow stars get a speed value of 0
     if (this.x_speed == 0) this.y_speed = 2;
     if (this.y_speed == 0) this.x_speed = 2;
-    // Go to nearest window border
+    // Go to closest window border
     if (this.canvas_x < x_middle + x_motion) this.x_speed *= -1;
     if (this.canvas_y < y_middle + y_motion) this.y_speed *= -1;
   };
 }
-
-// Animation frame caller
+// Move each star to the next frame
 function moveStars() {
-  if (!stopped) {
-    // Eraser frame
-    // ctx.fillStyle = "rgba(0,0,0,0.60)";
-    // ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(background,0,0,window.innerWidth,window.innerHeight,0,0,window.innerWidth,window.innerHeight)
-    // Move each star in stars
-    for (var i = 0; i < stars.length; i++) {
-      stars[i].moveStar();
-    }
-    // User input
-    // if(x_motion >= 500) x_motion = 500
-    // if(y_motion >= 500) y_motion = 500
+  for (var i = 0; i < stars.length; i++) {
+    stars[i].moveStar();
   }
-  // Next frame
-  requestAnimationFrame(moveStars);
 }
+// Animation frame caller
+function nextFrame() {
+  if (!paused && !stopped) {
+    // Draw background
+    ctx.drawImage(background, 0 - x_motion * 0.02, 0 - y_motion * 0.02);
+    moveStars();
+  } else if (!paused && stopped || paused && !stopped) {
+    // Fade in background or fade out
+    ctx.fillStyle = "rgba(0,0,0,0.5)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    moveStars();
+  }
+  // Draw checkpoint image
+  // s == image source, d == canvas
+  // image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight
+  else
+    ctx.drawImage(
+      checkpoint_image,
+      0,
+      0,
+      x_middle,
+      canvas.height,
+      x_middle,
+      0,
+      x_middle,
+      canvas.height
+    );
+  // Next frame
+  requestAnimationFrame(nextFrame);
+}
+
 // Populate stars array
 while (stars.length <= MAX_STARS) {
   // Randomize initial properties
@@ -129,4 +149,4 @@ while (stars.length <= MAX_STARS) {
   stars.push(new Star(x_axis, y_axis, star_radii));
 }
 // Start animation
-requestAnimationFrame(moveStars);
+requestAnimationFrame(nextFrame);
