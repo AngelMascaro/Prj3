@@ -14,6 +14,7 @@
 	<!-- <script src="https://pixijs.download/release/pixi.min.js"></script> -->
 	<!-- <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> -->
 	<script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
+	<script src="js/i18n.js" defer></script>
 	<script src="js/checkpointRequest.js" async></script>
 	<script src="js/onLoad.js" defer></script>
 	<script src="js/controller.js" defer></script>
@@ -22,34 +23,44 @@
 
 <body>
 	<main>
-		<img src="images/space-background.png" id="space-background" alt="" style="display: none;">
+		<img class="hidden" src="images/space-background.png" id="space-background" alt="" style="display: none;">
+		<img class="hidden" src="" id="checkpointPhoto" alt="Photo of the planet or satellite">
 		<canvas id="responsive-canvas"></canvas>
 		<section id="app">
-			<form>
-				<label>{{ $t('message.language') }}</label>
-				<select v-model="$i18n.locale">
-					<option id="bt_en" value="en">English</option>
-					<option id="bt_ca" value="ca">Català</option>
-				</select>
-			</form>
-			<p>{{ $t("message.hello") }}</p>
+			<article id="healthbar">
+				<div id="health" class="filler"></div>
+			</article>
+			<article id="cargobar">
+				<div id="cargo" class="filler"></div>
+			</article>
+			<article id="screen">
+				<form>
+					<label>{{ $t('message.language') }}</label>
+					<select v-model="$i18n.locale">
+						<option id="bt_en" value="en">English</option>
+						<option id="bt_ca" value="ca">Català</option>
+					</select>
+				</form>
+				<p>{{ $t("message.hello") }}</p>
+				<input type="text" name="" id="checkpoint">
+				<button id="json">JSON</button>
+				<button id="stop">Stop</button>
+				<!-- <div id="counter">
+					Counter: {{ counter }}
+				</div> -->
+				<table id="table">
+					<tbody id="checkpointData">
+						<caption id="checkpointName"></caption>
+						<img src="" id="checkpointSymbol" alt="">
+					</tbody>
+				</table>
+				<!-- <iframe id="starship_iframe" title="Starship Vehicle" width="600" height="300"
+					src="https://www.spacex.com/vehicles/starship/index.html">
+				</iframe> -->
+			</article>
 		</section>
 	</main>
-	<input type="text" name="" id="checkpoint">
-	<button id="json">JSON</button>
-	<button id="stop">Stop</button>
-	<!-- <div id="counter">
-		Counter: {{ counter }}
-	</div> -->
-	<script src="/js/i18n.js"></script>
-	<table id="table">
-		<caption id="checkpointName"></caption>
-		<img src="" id="checkpointPhoto" alt="Photo of the planet or satellite" style="display: none;">
-		<img src="" id="checkpointSymbol" alt="Orbital's symbol">
-		<tbody id="checkpointData">
-
-		</tbody>
-	</table>
+	<footer></footer>
 
 </body>
 

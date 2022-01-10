@@ -113,7 +113,7 @@ function nextFrame() {
     // Draw background
     ctx.drawImage(background, 0 - x_motion * 0.02, 0 - y_motion * 0.02);
     moveStars();
-  } else if (!paused && stopped || paused && !stopped) {
+  } else if ((!paused && stopped) || (paused && !stopped)) {
     // Fade in background or fade out
     ctx.fillStyle = "rgba(0,0,0,0.5)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -122,7 +122,10 @@ function nextFrame() {
   // Draw checkpoint image
   // s == image source, d == canvas
   // image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight
-  else
+  else {
+    ctx.fillStyle = "rgba(0,0,0,0.5)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
     ctx.drawImage(
       checkpoint_image,
       0,
@@ -134,6 +137,7 @@ function nextFrame() {
       x_middle,
       canvas.height
     );
+  }
   // Next frame
   requestAnimationFrame(nextFrame);
 }
